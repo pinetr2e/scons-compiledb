@@ -18,9 +18,6 @@ setuptools.setup(
     url='https://github.com/pinetr2e/scons-compiledb',
     packages=setuptools.find_packages(),
     setup_requires=['pytest-runner'],
-    extras_require={
-        'PNG': ['plantuml'],
-    },
     tests_require=["pytest"],
     classifiers=[
         'Development Status :: 3 - Alpha',
