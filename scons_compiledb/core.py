@@ -33,14 +33,14 @@ class Config:
 
 def enable(env, config=None):
     """
-    Hook into Object builders to collect compilation info.
+    Hook into object builders to collect compilation info.
 
-    Enable() adds a new builder, CompileDb to generates DB file. CompileDb
+    enable() adds a new builder, CompileDb to generates DB file. CompileDb
     builder can specify the target DB file and the default is
     compile_commands.json.
 
-    Note that CompieDb builder only collects info for the Object related
-    builders since Enable() is called.
+    Note that CompileDb builder only collects info for the object builders
+    since enable() is called.
     """
     config = config if config else Config()
     compile_commands = {}
@@ -49,7 +49,7 @@ def enable(env, config=None):
     env['_COMPILE_DB_ID'] = id(compile_commands)
 
     def create_db_entry_emitter(cxx, shared):
-        def EmitDbEntry(target, source, env):
+        def emitter(target, source, env):
             if env.get('_COMPILE_DB_ID') != id(compile_commands):
                 return target, source
 
@@ -65,7 +65,7 @@ def enable(env, config=None):
             env.NoCache(entry)
             db_entry_nodes.append(entry_node)
             return target, source
-        return EmitDbEntry
+        return emitter
 
     def add_db_entry_action(target, source, env):
         env['_COMPILE_DB_ENTRY_FUNC']()
