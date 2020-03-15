@@ -7,6 +7,15 @@ database defined by
 The main functionality of scons-compiledb is based on the version in
 [MongoDB](https://github.com/mongodb/mongo/blob/master/site_scons/site_tools/compilation_db.py).
 
+Features:
+
+- Multiple construction environments support.
+- Merging of compile_commands.json.
+- Simple customisation for DB entry generation.
+- DB generation with --compiledb command line option.
+- Installation with PyPI
+
+
 
 ## Installation
 
