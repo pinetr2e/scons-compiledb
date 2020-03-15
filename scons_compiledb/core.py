@@ -77,8 +77,8 @@ def enable(env, config=None):
             full_compile_commands = pickle.load(f)
 
         # Convert dict into a list
-        contents = [dict(entry, file=source)
-                    for source, entry in full_compile_commands.items()]
+        contents = [dict(entry, file=source_file)
+                    for source_file, entry in full_compile_commands.items()]
         with open(dbPath, 'w') as f:
             json.dump(contents, f, indent=2)
 
