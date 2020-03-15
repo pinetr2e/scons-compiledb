@@ -1,4 +1,7 @@
+[![Build Status](https://travis-ci.org/pinetr2e/scons-compiledb.svg?branch=master)](https://travis-ci.org/pinetr2e/scons-compiledb)
+[![PyPI version](https://badge.fury.io/py/scons-compiledb.svg)](https://badge.fury.io/py/scons-compiledb)
 # SCons Compilation DB support
+
 
 scons-compiledb adds a support for generating JSON formatted compilation
 database defined by
