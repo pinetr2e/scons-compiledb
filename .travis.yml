@@ -14,15 +14,13 @@ script:
 branches:
   only:
   - master
-    # Ruby regex to match tags. Required, or travis won't trigger deploys when
-    # a new tag is pushed. Version tags should be of the form: v0.1.0
-  - /^v\d+\.\d+\.\d+.*$/
+  - "/^v\\d+\\.\\d+\\.\\d+.*$/"
 deploy:
   provider: pypi
   distributions: sdist bdist_wheel
-  user: pinetr2e
+  user: __token__
   password:
-    secure: e+1QUt4MOE0TdShLdEFo+7NgUlKFP44QNVI8dQSyIhNvgn/vlL1kBNpb3UwkW8fRwS9C+lfHmqjgnh1vhRdVycMKs15DIwY6LwRCqesalj0AUb40LT3D1BKFar3Fk1gRdPN3/sYAafDuHG2cAFrkZ9L3JXmu2ywFkq7P9bBHz/Y7uYjmHHJKgv3pg2IqGV5ueXBShfsVy9m4o3W/k6b0vPkhiFbKJM0HkQZ21rFdv/t/ZGi5E9FYrDkzy5FVsmnc+3htGI/V5XMP+FCHaWy/xA4e1VzUx5ILNViu3sgidwik62O7AGcoWvr6eaxIRUaaxiznnYSiqOw0gxAc1NVsGEVEGVCEF4V9GUjp+fM+LuB9fy9ADUllk8LVKorwZmx5Nune0d7MxTTcF8idM7rNwFoPkxm0yu88GQUqDbkPaz5VvUOza3ODsK3c044W46Z5Ym7ejfarTTL8Sz7fWIomOIWwQ7fpSnkidxdJDE1wrBXIquY32C8XLIIOAvr+RVtCMBj+T0XQPunk+2UAQNYQRJP3pEYoglxid24zzpMEyX4tTwWAAdwzAnwCMHGOptXch67JncI/1sL94PoEyMt99QxjrL5UvIKAdXVIT9p7b2cG57xXQma4kY6Fav/8oWYmq67M+SgRqD+n/l762GQL+TN538kL2YaVWtXAjzTEtkI=
+    secure: Ef7Go3bndaYDU5M4uy0gf7ca22XjsQXXWGLlZkJqUChdKsJ2Yd5lqO0Hw2XMXwnJOZybC2tIwR9EtMtaR19IltZKW3KIHx3j3NemajCFkF4RF6fLHyfBFqAR0x/KINhBPnd1jEUiEEZItKvZjhTKrfKfuILDfnBZji3jXW4nrhlD4XtiuYlXPimpWk+1UC71vhu4kHem6Pasq53odHKzWG9itPwHE4Rft86lp7WH0DNAqPBtns2Qx7Mw7onPvN05ulVDX+Tqs5e5fSALmn0sUmWT5Iyvv2MzZOxevRaLd66UvD6Kumrc6+U79mxve0GdsuP13a4WLfIwjYpy7Y0ewSYiaDWH0K83+e70YUdROvk+FSNN3fCCEJHmxJlktjXjytyp9dKeEvyfsdB71TYapc/+Jgf4O+AoA9ZdIDJABU3DMqpfiYKA2BV9oQKMLPnduRbRKDxUP8vHcwzJ5z0IAwIMbk0eR4W2Ez8XLzjIV1SV8H1kfJqG2ItvxY9GZa1E+ZtZeu2vL7vdA0k2sYjTvXlxOhQXIMaqJOseEiijLWMK7KqtP7zSX4pNC8pmrsQ+p/NbtelZ/5oS9hKhNUKE3mSR8LqAehD7qNYDAk5muAJ5HbZ0ay2pTUCI1YKN+8ukXizNDS/2dy8hYvSP48kcPJFo2moYN063ZdtFnzFbmys=
   on:
     tags: true
   skip_existing: true
