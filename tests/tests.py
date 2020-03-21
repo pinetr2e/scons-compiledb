@@ -64,6 +64,7 @@ def test_config_entry_func_simple():
     run_scons('scons -f sconstruct_config_entry_func_simple')
     db = read_compile_db()
     assert db['a.c']['command'] == "clang -DD1 -DD2 -II1 -II2 -c a.c"
+    assert db['b.cpp']['command'] == "clang++ -DD1 -DD2 -II1 -II2 -c b.cpp"
 
 
 def test_config_custom_entry_func():
