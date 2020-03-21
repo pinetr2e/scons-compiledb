@@ -28,7 +28,7 @@ def read_compile_db(db_name='compile_commands.json'):
         return {i['file']: i for i in items}
 
 
-def test_simple():
+def test_enable():
     run_scons('scons -f sconstruct_simple')
     db = read_compile_db()
     assert db['a.c']['command'] == "gcc -o a.o -c -DD1 -II1 a.c"
@@ -52,8 +52,14 @@ def test_config_db():
     assert read_compile_db('foo.json') is not None
 
 
-def test_config_entry_func():
-    run_scons('scons -f sconstruct_config_entry_func')
+def test_config_entry_func_simple():
+    run_scons('scons -f sconstruct_config_entry_func_simple')
     db = read_compile_db()
     assert db['a.c']['command'] == "clang -DD1 -DD2 -II1 -II2 -c a.c"
+
+
+def test_config_custom_entry_func():
+    run_scons('scons -f sconstruct_config_custom_entry_func')
+    db = read_compile_db()
     assert db['a.c']['directory'] == "c:"
+    assert db['a.c']['command'] == "clang -DD1 -DD2 -II1 -II2 -c a.c"

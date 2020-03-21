@@ -1,0 +1,16 @@
+import scons_compiledb
+
+def my_entry_func(env, target, source, cxx, shared):
+    entry = scons_compiledb.entry_func_simple(env, target, source, cxx, shared)
+    entry['directory'] = 'c:'
+    return entry
+
+env = DefaultEnvironment(tools=['gcc', 'g++', 'link'],
+                         CPPDEFINES=['D1'], CPPPATH=['I1'])
+
+config = scons_compiledb.Config(entry_func=my_entry_func)
+scons_compiledb.enable(env, config)
+
+env.Program("hello", "a.c")
+env.Append(CPPDEFINES=['D2'], CPPPATH=['I2'])
+env.CompileDb()

@@ -6,32 +6,10 @@ import itertools
 import SCons
 from SCons.Builder import Builder, DictEmitter, ListEmitter
 from SCons.Action import Action
-
-DEFAULT_DB_NAME = 'compile_commands.json'
-
-
-def _create_db_entry(env, target, source, cxx, shared):
-    cmdstr = '${}{}'.format('SH' if shared else '',
-                            'CXXCOM' if cxx else 'CCCOM')
-    command = Action(cmdstr).strfunction(target, source, env)
-    return {'directory': env.Dir('#').abspath,
-            'file': str(source[0]),
-            'command': command}
+from SCons.Script import GetOption, AddOption
 
 
-class Config:
-    def __init__(self,
-                 db=DEFAULT_DB_NAME,
-                 cxx_suffixes=('.cpp', '.cc'),
-                 cc_suffixes=('.c',),
-                 entry_func=_create_db_entry):
-        self.db = db
-        self.cc_suffixes = cc_suffixes
-        self.cxx_suffixes = cxx_suffixes
-        self.entry_func = entry_func
-
-
-def enable(env, config=None):
+def enable(env, config):
     """
     Hook into object builders to collect compilation info.
 
@@ -42,7 +20,6 @@ def enable(env, config=None):
     Note that CompileDb builder only collects info for the object builders
     since enable() is called.
     """
-    config = config if config else Config()
     compile_commands = {}
     db_entry_nodes = []
 
@@ -127,3 +104,26 @@ def enable(env, config=None):
         env.AlwaysBuild(db_pickle)
         return env._UpdateDb(target, db_pickle)
     env.AddMethod(compile_db, 'CompileDb')
+
+
+def enable_with_cmdline(env, config, option_name, option_help):
+    """
+    Add command line option(--compiledb) and build DB if it is set.
+    """
+
+    def is_option_on():
+        def add_script_option():
+            AddOption('--' + option_name, dest='compile_db',
+                      action='store_true', help=option_help)
+        try:
+            return GetOption('compile_db')
+        except AttributeError:
+            add_script_option()
+            return GetOption('compile_db')
+
+    if not is_option_on():
+        return
+
+    enable(env, config)
+    db = env.CompileDb(config.db)
+    env.Default(db)
