@@ -99,7 +99,7 @@ This is default and it should work for the most of cases.
 
 - `entry_func_simple`
 
-Use `CPPPATH` and `CPPDEFINES` only and =clang=/=clang++= as compiler tool name.
+Use `CPPPATH` and `CPPDEFINES` only and *clang*/*clang++* as compiler tool name.
 This will be useful to use clangd with compilers, which use command line
 arguments clangd cannot understand.
 
