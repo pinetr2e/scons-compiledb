@@ -29,12 +29,20 @@ def read_compile_db(db_name='compile_commands.json'):
 
 
 def test_enable():
-    run_scons('scons -f sconstruct_simple')
+    run_scons('scons -f sconstruct_basic')
     db = read_compile_db()
-    assert db['a.c']['command'] == "gcc -o a.o -c -DD1 -II1 a.c"
-    assert db['a.c']['directory'] == os.path.abspath("tests")
+    assert db == {
+        'a.c': {
+            'directory': os.path.abspath("tests"),
+            'command': "gcc -o a.o -c -DD1 -II1 a.c",
+            'file': 'a.c'},
+        'b.cpp': {
+            'directory': os.path.abspath("tests"),
+            'command': "g++ -o b.o -c -DD1 -II1 b.cpp",
+            'file': 'b.cpp'},
+    }
 
-    run_scons('scons -f sconstruct_simple -c')
+    run_scons('scons -f sconstruct_basic -c')
     assert not read_compile_db()
 
 
@@ -63,3 +71,21 @@ def test_config_custom_entry_func():
     db = read_compile_db()
     assert db['a.c']['directory'] == "c:"
     assert db['a.c']['command'] == "clang -DD1 -DD2 -II1 -II2 -c a.c"
+
+
+def test_multiple_envs():
+    run_scons('scons -f sconstruct_multiple_envs')
+    db = read_compile_db('foo.json')
+    assert db == {
+        'a.c': {
+            'directory': os.path.abspath("tests"),
+            'command': "gcc -o a.o -c -DD1 -II1 a.c",
+            'file': 'a.c'}
+    }
+    db2 = read_compile_db('bar.json')
+    assert db2 == {
+        'b.c': {
+            'directory': os.path.abspath("tests"),
+            'command': "gcc -o b.o -c -DD2 -II2 b.c",
+            'file': 'b.c'},
+    }

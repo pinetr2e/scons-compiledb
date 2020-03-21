@@ -3,8 +3,7 @@ import scons_compiledb
 env = Environment(tools=['gcc', 'g++', 'link'],
                   CPPDEFINES=['D1'], CPPPATH=['I1'])
 
-config = scons_compiledb.Config(db='foo.json')
-scons_compiledb.enable(env, config)
+scons_compiledb.enable(env)
 
-env.Program('hello', 'a.c')
+env.Program('hello', ['a.c', 'b.cpp'])
 env.CompileDb()

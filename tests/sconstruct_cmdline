@@ -1,7 +1,7 @@
 import scons_compiledb
 
-env = DefaultEnvironment(tools=['gcc', 'g++', 'link'],
-                         CPPDEFINES=['D1'], CPPPATH=['I1'])
+env = Environment(tools=['gcc', 'g++', 'link'],
+                  CPPDEFINES=['D1'], CPPPATH=['I1'])
 scons_compiledb.enable_with_cmdline(env)
 
-env.Program("hello", "a.c")
+env.Program('hello', 'a.c')

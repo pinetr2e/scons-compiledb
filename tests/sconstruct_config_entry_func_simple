@@ -1,11 +1,11 @@
 import scons_compiledb
 
-env = DefaultEnvironment(tools=['gcc', 'g++', 'link'],
-                         CPPDEFINES=['D1'], CPPPATH=['I1'])
+env = Environment(tools=['gcc', 'g++', 'link'],
+                  CPPDEFINES=['D1'], CPPPATH=['I1'])
 
 config = scons_compiledb.Config(entry_func=scons_compiledb.entry_func_simple)
 scons_compiledb.enable(env, config)
 
-env.Program("hello", "a.c")
+env.Program('hello', 'a.c')
 env.Append(CPPDEFINES=['D2'], CPPPATH=['I2'])
 env.CompileDb()

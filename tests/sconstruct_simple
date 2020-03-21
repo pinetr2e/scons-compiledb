@@ -1,8 +1,0 @@
-import scons_compiledb
-
-env = DefaultEnvironment(tools=['gcc', 'g++', 'link'],
-                         CPPDEFINES=['D1'], CPPPATH=['I1'])
-scons_compiledb.enable(env)
-
-env.Program("hello", "a.c")
-env.CompileDb()

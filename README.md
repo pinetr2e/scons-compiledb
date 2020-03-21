@@ -116,6 +116,3 @@ Please check SConscript files in [test folder](./tests)
 
 The main functionality of scons-compiledb is heavily based on [MongoDB source
 code](https://github.com/mongodb/mongo/blob/master/site_scons/site_tools/compilation_db.py).
-
-
-

@@ -5,8 +5,8 @@ def my_entry_func(env, target, source, cxx, shared):
     entry['directory'] = 'c:'
     return entry
 
-env = DefaultEnvironment(tools=['gcc', 'g++', 'link'],
-                         CPPDEFINES=['D1'], CPPPATH=['I1'])
+env = Environment(tools=['gcc', 'g++', 'link'],
+                  CPPDEFINES=['D1'], CPPPATH=['I1'])
 
 config = scons_compiledb.Config(entry_func=my_entry_func)
 scons_compiledb.enable(env, config)

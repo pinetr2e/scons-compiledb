@@ -1,0 +1,16 @@
+import scons_compiledb
+
+env = Environment(tools=['gcc', 'g++', 'link'],
+                  CPPDEFINES=['D1'], CPPPATH=['I1'])
+scons_compiledb.enable(env)
+
+env2 = Environment(tools=['gcc', 'g++', 'link'],
+                    CPPDEFINES=['D2'], CPPPATH=['I2'])
+scons_compiledb.enable(env2)
+
+env.Program('hello', ['a.c'])
+env2.Program('hello2', ['b.c'])
+
+# Note that we need to specify different output file names.
+env.CompileDb('foo.json')
+env2.CompileDb('bar.json')
