@@ -1,18 +1,31 @@
 from . import core, entry_func
 
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 
 DEFAULT_OPTION_NAME = 'compiledb'
 DEFAULT_DB_NAME = 'compile_commands.json'
 
 
 def enable(env, config=None):
+    """
+    Enable compilation command collection by hooking into object builders.
+
+    enable() adds a new builder, CompileDb to generates DB file. CompileDb
+    builder can specify the target DB file and the default is
+    'compile_commands.json'.
+
+    Note that CompileDb builder only collects info for the object builders
+    since enable() is called.
+    """
     return core.enable(env, config if config else Config())
 
 
 def enable_with_cmdline(env, config=None,
                         option_name=DEFAULT_OPTION_NAME,
                         option_help='Update {}'.format(DEFAULT_DB_NAME)):
+    """
+    Enable and build DB with command line option, --compiledb.
+    """
     return core.enable_with_cmdline(
         env, config if config else Config(), option_name, option_help)
 

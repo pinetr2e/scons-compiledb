@@ -2,7 +2,6 @@
 [![PyPI version](https://badge.fury.io/py/scons-compiledb.svg)](https://badge.fury.io/py/scons-compiledb)
 # SCons Compilation DB support
 
-
 scons-compiledb adds a support for generating JSON formatted compilation
 database defined by
 [Clang](https://clang.llvm.org/docs/JSONCompilationDatabase.html).
@@ -10,9 +9,9 @@ database defined by
 Features:
 
 - Multiple construction environments support.
-- Merging of compile_commands.json.
+- Merge of compile_commands.json across SCons invocations
 - Customisation for DB entry generation.
-- DB generation with --compiledb command line option.
+- Build with command line option, --compiledb
 - Installation with PyPI
 
 
@@ -105,6 +104,18 @@ arguments clangd cannot understand.
 
 `entry_func` can be easily customised. Please refer to the source code of [the
 predefined functions](./scons_compiledb/entry_func.py)
+
+## Details
+
+`scons_compiledb` maintains a pickle file, which is
+`compile_commands.json.pickle` as default, to merge compile commands across the
+multiple SCons invocations. The final `compile_commands.json` gets updated only
+when the pickle file is changed.
+
+The pickle file contains a simple dict with a (source file, output file) pair as
+a key. It means that the multiple entries can exist as long as the pair is
+unique. The final entries in `compile_commands.json` do not contain `output` key
+but can contain multiple entries with the same `source` as key.
 
 
 ## Examples
