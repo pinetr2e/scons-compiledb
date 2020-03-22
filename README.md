@@ -20,6 +20,8 @@ functionality and it is likely to have it in the near feature. However, this
 module can still provide some advantages such as supporting old version of SCons
 and other unique features.
 
+The module was tested with Python 2.x/3.x along with SCons 2.x/3.x.
+
 
 ## Installation
 
