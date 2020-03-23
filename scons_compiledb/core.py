@@ -1,5 +1,4 @@
 import json
-import os
 import pickle
 import itertools
 
@@ -11,6 +10,7 @@ from SCons.Script import GetOption, AddOption
 
 def enable(env, config):
     compile_commands = {}
+    merged_compile_commands = {}
     db_entry_nodes = []
 
     env['_COMPILE_DB_ID'] = id(compile_commands)
@@ -39,22 +39,14 @@ def enable(env, config):
         env['_COMPILE_DB_ENTRY_FUNC']()
 
     def update_db_action(target, source, env):
-        pickle_path = source[0].path
-        dbPath = target[0].path
-        with open(pickle_path, 'rb') as f:
-            merged_compile_commands = pickle.load(f)
-
+        db_path = target[0].path
         # Convert dict to a list sorted with file/output tuple.
         contents = [e for _, e in sorted(merged_compile_commands.items())]
-        with open(dbPath, 'w') as f:
+        with open(db_path, 'w') as f:
             json.dump(contents, f, indent=2)
 
     def update_db_pickle_action(target, source, env):
         pickle_path = target[0].path
-        merged_compile_commands = {}
-        if os.path.exists(pickle_path):
-            with open(pickle_path, 'rb') as f:
-                merged_compile_commands = pickle.load(f)
         merged_compile_commands.update(compile_commands)
         with open(pickle_path, 'wb') as f:
             pickle.dump(merged_compile_commands, f)
@@ -90,7 +82,11 @@ def enable(env, config):
         action=Action(update_db_action, 'Update compilation DB: $TARGET'))
 
     def compile_db(env, target=config.db):
-        db_pickle = env._UpdateDbPickle('{}.pickle'.format(target), [])
+        merged_compile_commands.clear()
+        db_pickle = env._UpdateDbPickle('{}.pickle'.format(target), [])[0]
+        if db_pickle.exists():
+            merged_compile_commands.update(
+                pickle.loads(db_pickle.get_contents()))
         env.AlwaysBuild(db_pickle)
         return env._UpdateDb(target, db_pickle)
     env.AddMethod(compile_db, 'CompileDb')
