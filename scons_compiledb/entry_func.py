@@ -20,8 +20,9 @@ def simple(env, target, source, cxx, shared):
     """
     flags = '{} {}'.format(
         ' '.join('-D{}'.format(d) for d in env.get('CPPDEFINES')),
-        ' '.join('-I{}'.format(i) for i in env.get('CPPPATH')))
-    source_path = source[0].path
+        ' '.join('-I{}'.format(str(env.Dir(p))) for p in env.get('CPPPATH')))
+
+    source_path = str(source[0])
     toolchain = 'clang++' if cxx else 'clang'
     return {'directory': env.Dir('#').abspath,
             'file': source_path,
