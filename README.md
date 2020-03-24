@@ -70,7 +70,7 @@ It will generate `compile_commands.json` file only when SCons is invoked with
 $ scons --compiledb
 
 ...
-Check compilation DB : compile_commands.json.pickle
+Check compilation DB : compile_commands.json.internal
 Update compilation DB: compile_commands.json
 scons: done building targets.
 ```
@@ -109,15 +109,10 @@ predefined functions](./scons_compiledb/entry_func.py)
 
 ## Details
 
-`scons_compiledb` maintains a pickle file, which is
-`compile_commands.json.pickle` as default, to merge compile commands across the
-multiple SCons invocations. The final `compile_commands.json` gets updated only
-when the pickle file is changed.
-
-The pickle file contains a simple dict with a (source file, output file) pair as
-a key. It means that the multiple entries can exist as long as the pair is
-unique. The final entries in `compile_commands.json` do not contain `output` key
-but can contain multiple entries with the same `source` as key.
+`scons_compiledb` maintains an additional file `compile_commands.json.internal`
+as default, to merge compile commands across the multiple SCons invocations. The
+final file, `compile_commands.json` is touched only when the internal file is
+changed.
 
 
 ## Examples

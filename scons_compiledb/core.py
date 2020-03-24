@@ -1,5 +1,4 @@
 import json
-import pickle
 import itertools
 
 import SCons
@@ -23,7 +22,7 @@ def enable(env, config):
             def add_db_entry():
                 entry = config.entry_func(env, target, source, cxx, shared)
                 if entry:
-                    key = (entry['file'], str(target[0]))
+                    key = '{}:{}'.format(entry['file'], str(target[0]))
                     compile_commands[key] = entry
 
             entry_node = SCons.Node.Python.Value(source)
@@ -39,17 +38,15 @@ def enable(env, config):
         env['_COMPILE_DB_ENTRY_FUNC']()
 
     def update_db_action(target, source, env):
-        db_path = target[0].path
         # Convert dict to a list sorted with file/output tuple.
         contents = [e for _, e in sorted(merged_compile_commands.items())]
-        with open(db_path, 'w') as f:
+        with open(target[0].path, 'w') as f:
             json.dump(contents, f, indent=2)
 
-    def update_db_pickle_action(target, source, env):
-        pickle_path = target[0].path
+    def update_internal_db_action(target, source, env):
         merged_compile_commands.update(compile_commands)
-        with open(pickle_path, 'wb') as f:
-            pickle.dump(merged_compile_commands, f)
+        with open(target[0].path, 'w') as f:
+            json.dump(merged_compile_commands, f, sort_keys=True)
 
     #
     # Hook new emitters to the existing ones
@@ -71,8 +68,8 @@ def enable(env, config):
     env['BUILDERS']['_AddDbEntry'] = Builder(
         action=Action(add_db_entry_action, None))
 
-    env['BUILDERS']['_UpdateDbPickle'] = Builder(
-        action=Action(update_db_pickle_action,
+    env['BUILDERS']['_UpdateInternalDb'] = Builder(
+        action=Action(update_internal_db_action,
                       'Check compilation DB : $TARGET'),
         target_scanner=SCons.Scanner.Scanner(
             function=lambda node, env, path: db_entry_nodes,
@@ -83,12 +80,12 @@ def enable(env, config):
 
     def compile_db(env, target=config.db):
         merged_compile_commands.clear()
-        db_pickle = env._UpdateDbPickle('{}.pickle'.format(target), [])[0]
-        if db_pickle.exists():
+        merged_db = env._UpdateInternalDb('{}.internal'.format(target), [])[0]
+        if merged_db.exists():
             merged_compile_commands.update(
-                pickle.loads(db_pickle.get_contents()))
-        env.AlwaysBuild(db_pickle)
-        return env._UpdateDb(target, db_pickle)
+                json.loads(merged_db.get_text_contents()))
+        env.AlwaysBuild(merged_db)
+        return env._UpdateDb(target, merged_db)
     env.AddMethod(compile_db, 'CompileDb')
 
 
