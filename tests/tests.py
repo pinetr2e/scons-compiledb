@@ -7,7 +7,8 @@ import pytest
 @pytest.fixture
 def cleandir():
     subprocess.call(
-        "cd tests; rm -f *.json *.json.internal *.o *.os hello* build/* build2/* ",
+        "cd tests; "
+        "rm -f *.json *.json.internal *.o *.os ' 'hello* build/* build2/* ",
         shell=True)
 
 
