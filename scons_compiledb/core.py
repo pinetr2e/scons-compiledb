@@ -106,3 +106,7 @@ def enable_with_cmdline(env, config, option_name, option_help):
     enable(env, config)
     db = env.CompileDb(config.db)
     env.Default(env.Alias('compiledb', db))
+
+
+def enabled(env):
+    return '_UpdateDb' in env['BUILDERS']

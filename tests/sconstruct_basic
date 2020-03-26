@@ -7,3 +7,5 @@ scons_compiledb.enable(env)
 
 env.Program('hello', ['a.c', 'b.cpp'])
 env.CompileDb()
+
+assert scons_compiledb.enabled(env) is True

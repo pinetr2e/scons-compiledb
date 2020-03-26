@@ -64,6 +64,7 @@ def test_same_source_compiled_multiple_times():
         },
     ]
 
+
 def test_enable_with_cmdline():
     run_scons('scons -f sconstruct_cmdline')
     assert read_compile_db() is None

@@ -114,6 +114,8 @@ as default, to merge compile commands across the multiple SCons invocations. The
 final file, `compile_commands.json` is touched only when the internal file is
 changed.
 
+`enabled(env)` can be called to check whether it is enabled before or not.
+
 
 ## Examples
 

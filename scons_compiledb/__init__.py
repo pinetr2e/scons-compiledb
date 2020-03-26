@@ -63,3 +63,7 @@ class Config:
         self.cc_suffixes = cc_suffixes
         self.cxx_suffixes = cxx_suffixes
         self.entry_func = entry_func
+
+
+def enabled(env):
+    return core.enabled(env)
