@@ -63,9 +63,6 @@ def test_same_source_compiled_multiple_times():
             'file': 'a.c'
         },
     ]
-    run_scons('scons -f sconstruct_basic -c')
-    assert not read_compile_db()
-
 
 def test_enable_with_cmdline():
     run_scons('scons -f sconstruct_cmdline')
@@ -113,7 +110,6 @@ def test_config_custom_entry_func():
 def test_merge():
     run_scons('scons -f sconstruct_merge')
     run_scons('scons -f sconstruct_merge2')
-
     db = read_compile_db()
     assert db == [
         {
@@ -123,7 +119,7 @@ def test_merge():
         },
         {
             'directory': os.path.abspath("tests"),
-            'command': "gcc -o b.o -c -DD1 -II1 b.c",
+            'command': "gcc -o b.o -c -DD2 -II2 b.c",
             'file': 'b.c'
         },
     ]
