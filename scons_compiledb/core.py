@@ -1,5 +1,6 @@
 import json
 import itertools
+import os
 
 import SCons
 from SCons.Builder import Builder, DictEmitter, ListEmitter
@@ -10,9 +11,9 @@ from SCons.Script import GetOption, AddOption
 def enable(env, config):
     compile_commands = {}
     merged_compile_commands = {}
-    db_entry_nodes = []
 
     env['_COMPILE_DB_ID'] = id(compile_commands)
+    entry_group = SCons.Node.Python.Value(id(compile_commands))
 
     def create_db_entry_emitter(cxx, shared):
         def emitter(target, source, env):
@@ -30,7 +31,7 @@ def enable(env, config):
                                     _COMPILE_DB_ENTRY_FUNC=add_db_entry)
             env.AlwaysBuild(entry)
             env.NoCache(entry)
-            db_entry_nodes.append(entry_node)
+            env.Depends(entry_group, entry)
             return target, source
         return emitter
 
@@ -70,22 +71,21 @@ def enable(env, config):
 
     env['BUILDERS']['_UpdateInternalDb'] = Builder(
         action=Action(update_internal_db_action,
-                      'Check compilation DB : $TARGET'),
-        target_scanner=SCons.Scanner.Scanner(
-            function=lambda node, env, path: db_entry_nodes,
-            node_class=None))
+                      'Check compilation DB : $TARGET'))
 
     env['BUILDERS']['_UpdateDb'] = Builder(
         action=Action(update_db_action, 'Update compilation DB: $TARGET'))
 
     def compile_db(env, target=config.db):
         merged_compile_commands.clear()
-        merged_db = env._UpdateInternalDb('{}.internal'.format(target), [])[0]
-        if merged_db.exists():
+        head, tail = os.path.split(target)
+        internal_path = os.path.join(head, '.' + tail)
+        internal_db = env._UpdateInternalDb(internal_path, entry_group)[0]
+        if internal_db.exists():
             merged_compile_commands.update(
-                json.loads(merged_db.get_text_contents()))
-        env.AlwaysBuild(merged_db)
-        return env._UpdateDb(target, merged_db)
+                json.loads(internal_db.get_text_contents()))
+        env.AlwaysBuild(internal_db)
+        return env._UpdateDb(target, internal_db)
     env.AddMethod(compile_db, 'CompileDb')
 
 

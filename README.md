@@ -109,10 +109,10 @@ predefined functions](./scons_compiledb/entry_func.py)
 
 ## Details
 
-`scons_compiledb` maintains an additional file `compile_commands.json.internal`
-as default, to merge compile commands across the multiple SCons invocations. The
-final file, `compile_commands.json` is touched only when the internal file is
-changed.
+`scons_compiledb` maintains an internal dot file `.compile_commands.json` as
+default, to merge compile commands across the multiple SCons invocations. The
+final file, `compile_commands.json` is touched only when the internal dot file
+is changed.
 
 `enabled(env)` can be called to check whether it is enabled before or not.
 
