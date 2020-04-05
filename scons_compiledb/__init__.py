@@ -3,7 +3,7 @@ from . import core, entry_func
 __version__ = '0.5.3'
 
 DEFAULT_OPTION_NAME = 'compiledb'
-DEFAULT_DB_NAME = 'compile_commands.json'
+DEFAULT_DB_NAME = '#/compile_commands.json'
 
 
 def enable(env, config=None):

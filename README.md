@@ -83,12 +83,12 @@ scons_compiledb.enable(env, config)
 
 ```
 
-| Parameter | Value | Default |
-|--------------|------------------------------------------------------------|-------------------------|
-| db           | filename of compilation DB.                                | 'compile_commands.json' |
-| entry_func   | function to determine the entry dict for each source file. | entry_func_default      |
-| cxx_suffixes | Suffixes for C++ files.                                    | ('.cpp', '.cc')         |
-| ccc_suffixes | Suffixes for C files.                                      | ('.c,)                  |
+| Parameter    | Value                                                      | Default                   |
+|--------------|------------------------------------------------------------|---------------------------|
+| db           | filename of compilation DB.                                | '#/compile_commands.json' |
+| entry_func   | function to determine the entry dict for each source file. | entry_func_default        |
+| cxx_suffixes | Suffixes for C++ files.                                    | ('.cpp', '.cc')           |
+| ccc_suffixes | Suffixes for C files.                                      | ('.c,)                    |
 
  `entry_func` is the main logic to convert source file node in SCons to a dict
  containing `directory`, `source` and `command` as keys. There are predefined
