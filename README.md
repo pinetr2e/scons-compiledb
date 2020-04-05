@@ -118,6 +118,9 @@ default, to merge compile commands across the multiple SCons invocations. The
 final file, `compile_commands.json` is touched only when the internal dot file
 is changed.
 
+When the compile commands are merged, it is based on source/output file name. It
+means that the entry with the same pair will be overwritten.
+
 `enabled(env)` can be called to check whether it is enabled before or not.
 
 
