@@ -50,8 +50,8 @@ be called. It can also specify the file name as an optional argument.
 
 ### Enable and generation with command line option --compiledb
 
-Similar to above but, `enable_with_cmdline()` is used instead, which internally
-calls env.CompileDb() when the command line option is specified.
+Similar to above but, `enable_with_cmdline()` is used instead. It will build
+'compile_commands.json' as default target with 'compildb' as alias name.
 
 ```python
 import scons_compiledb
@@ -62,9 +62,8 @@ scons_compiledb.enable_with_cmdline(env)
 # ... Use env normnally ...
 #
 ```
-
-It will generate `compile_commands.json` file only when SCons is invoked with
-`--compiledb` command line option:
+It means that `compile_commands.json` file will be generated when SCons is invoked with
+`--compiledb` command line option as follows:
 
 ```
 $ scons --compiledb
@@ -73,6 +72,11 @@ $ scons --compiledb
 Check compilation DB : compile_commands.json.internal
 Update compilation DB: compile_commands.json
 scons: done building targets.
+```
+
+As alias, `compiledb` can be specified with other build targets as follows:
+```
+$ scons --compiledb other_targets compiledb
 ```
 
 ### Customisation
