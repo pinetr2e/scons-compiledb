@@ -94,6 +94,7 @@ scons_compiledb.enable(env, config)
 | cxx_suffixes | Suffixes for C++ files.                                    | ('.cpp', '.cc')           |
 | ccc_suffixes | Suffixes for C files.                                      | ('.c,)                    |
 | reset        | Whether to remove existing entries                         | False                     |
+| multi        | Whether to allow multiple entries with the same 'file'.    | False                     |
 
 #### entry_func
 
@@ -121,6 +122,12 @@ invocations of SCons so that one DB file can be used. This is usually good
 thing. However, if it is not desirable for any reasons, `reset` config can be
 used.
 
+#### multi
+
+As default, `compile_commands.json` file keeps only one entry with the same
+`file` as the key. However, some tools can handle multiple entries with the same
+key. If `multi` is set, multiple entries are stored as long as they generate the
+different target(output) files.
 
 
 ## Details

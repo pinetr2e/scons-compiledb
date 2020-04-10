@@ -52,6 +52,8 @@ class Config:
           'clang'/'clang++' as compiler tool name. This will be useful to use
           clangd with compilers, which use command line arguments clangd cannot
           understand.
+     - reset       : Whether to reset old entries before collecting.
+     - multi       : Whether to have multiple entries with the same 'file'.
     """
 
     def __init__(self,
@@ -59,12 +61,14 @@ class Config:
                  cxx_suffixes=('.cpp', '.cc'),
                  cc_suffixes=('.c',),
                  entry_func=entry_func_default,
-                 reset=False):
+                 reset=False,
+                 multi=False):
         self.db = db
         self.cc_suffixes = cc_suffixes
         self.cxx_suffixes = cxx_suffixes
         self.entry_func = entry_func
         self.reset = reset
+        self.multi = multi
 
 
 def enabled(env):

@@ -48,23 +48,6 @@ def test_basic():
     assert not read_compile_db()
 
 
-def test_same_source_compiled_multiple_times():
-    run_scons('scons -f sconstruct_same_source')
-    db = read_compile_db()
-    assert db == [
-        {
-            'directory': os.path.abspath("tests"),
-            'command': "gcc -o build/a.o -c -DD1 a.c",
-            'file': 'a.c'
-        },
-        {
-            'directory': os.path.abspath("tests"),
-            'command': "gcc -o build2/a.o -c -DD2 a.c",
-            'file': 'a.c'
-        },
-    ]
-
-
 def test_enable_with_cmdline():
     run_scons('scons -f sconstruct_cmdline')
     assert read_compile_db() is None
@@ -135,5 +118,34 @@ def test_config_reset():
             'directory': os.path.abspath("tests"),
             'command': "gcc -o b.o -c -DD2 -II2 b.c",
             'file': 'b.c'
+        },
+    ]
+
+
+def test_same_source_compiled_multiple_times():
+    run_scons('scons -f sconstruct_same_source')
+    db = read_compile_db()
+    assert db == [
+        {
+            'directory': os.path.abspath("tests"),
+            'command': "gcc -o build2/a.o -c -DD2 a.c",
+            'file': 'a.c'
+        },
+    ]
+
+
+def test_config_multi():
+    run_scons('scons -f sconstruct_config_multi')
+    db = read_compile_db()
+    assert db == [
+        {
+            'directory': os.path.abspath("tests"),
+            'command': "gcc -o build/a.o -c -DD1 a.c",
+            'file': 'a.c'
+        },
+        {
+            'directory': os.path.abspath("tests"),
+            'command': "gcc -o build2/a.o -c -DD2 a.c",
+            'file': 'a.c'
         },
     ]

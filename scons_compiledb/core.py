@@ -23,7 +23,8 @@ def enable(env, config):
             def add_db_entry():
                 entry = config.entry_func(env, target, source, cxx, shared)
                 if entry:
-                    key = '{}:{}'.format(entry['file'], str(target[0]))
+                    key = '{}:{}'.format(
+                        entry['file'], str(target[0]) if config.multi else '')
                     compile_commands[key] = entry
 
             entry_node = SCons.Node.Python.Value(source)
