@@ -1,0 +1,14 @@
+import scons_compiledb
+
+env = Environment(tools=['gcc', 'g++', 'link'],
+                  CPPDEFINES=['D1'])
+
+config = scons_compiledb.Config(multi=True)
+scons_compiledb.enable(env, config)
+
+obj1 = env.Object('build/a.o', 'a.c')
+obj2 = env.Object('build2/a.o', 'a.c', CPPDEFINES=['D2'])
+
+env.Program('hello', obj1)
+env.Program('hello2', obj2)
+env.CompileDb()
