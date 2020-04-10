@@ -81,7 +81,7 @@ def enable(env, config):
         head, tail = os.path.split(target)
         internal_path = os.path.join(head, '.' + tail)
         internal_db = env._UpdateInternalDb(internal_path, entry_group)[0]
-        if internal_db.exists():
+        if (not config.reset) and internal_db.exists():
             merged_compile_commands.update(
                 json.loads(internal_db.get_text_contents()))
         env.AlwaysBuild(internal_db)

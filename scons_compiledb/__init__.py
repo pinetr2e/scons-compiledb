@@ -58,11 +58,13 @@ class Config:
                  db=DEFAULT_DB_NAME,
                  cxx_suffixes=('.cpp', '.cc'),
                  cc_suffixes=('.c',),
-                 entry_func=entry_func_default):
+                 entry_func=entry_func_default,
+                 reset=False):
         self.db = db
         self.cc_suffixes = cc_suffixes
         self.cxx_suffixes = cxx_suffixes
         self.entry_func = entry_func
+        self.reset = reset
 
 
 def enabled(env):

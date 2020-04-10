@@ -93,8 +93,11 @@ scons_compiledb.enable(env, config)
 | entry_func   | function to determine the entry dict for each source file. | entry_func_default        |
 | cxx_suffixes | Suffixes for C++ files.                                    | ('.cpp', '.cc')           |
 | ccc_suffixes | Suffixes for C files.                                      | ('.c,)                    |
+| reset        | Whether to remove existing entries                         | False                     |
 
- `entry_func` is the main logic to convert source file node in SCons to a dict
+#### entry_func
+
+`entry_func` is the main logic to convert source file node in SCons to a dict
  containing `directory`, `source` and `command` as keys. There are predefined
  entry functions as follows:
 
@@ -110,6 +113,14 @@ arguments clangd cannot understand.
 
 `entry_func` can be easily customised. Please refer to the source code of [the
 predefined functions](./scons_compiledb/entry_func.py)
+
+#### reset
+
+As default, `compile_commands.json` file is merged across the multiple
+invocations of SCons so that one DB file can be used. This is usually good
+thing. However, if it is not desirable for any reasons, `reset` config can be
+used.
+
 
 
 ## Details

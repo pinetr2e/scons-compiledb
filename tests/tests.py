@@ -124,3 +124,16 @@ def test_merge():
             'file': 'b.c'
         },
     ]
+
+
+def test_config_reset():
+    run_scons('scons -f sconstruct_merge')
+    run_scons('scons -f sconstruct_config_reset')
+    db = read_compile_db()
+    assert db == [
+        {
+            'directory': os.path.abspath("tests"),
+            'command': "gcc -o b.o -c -DD2 -II2 b.c",
+            'file': 'b.c'
+        },
+    ]
