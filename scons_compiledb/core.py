@@ -7,10 +7,26 @@ from SCons.Builder import Builder, DictEmitter, ListEmitter
 from SCons.Action import Action
 
 
+class _EntryCounter:
+    def __init__(self):
+        self.new = 0
+        self.updated = 0
+
+    def __str__(self):
+        return '{} new / {} updated'.format(self.new, self.updated)
+
+    def reset(self):
+        self.new = 0
+        self.updated = 0
+
+
 def enable(env, config):
     compile_commands = {}
+    entry_counter = _EntryCounter()
 
     env['_COMPILE_DB_ID'] = id(compile_commands)
+    env['_COMPILE_DB_COUNTER'] = entry_counter
+
     entry_group = SCons.Node.Python.Value(id(compile_commands))
 
     def create_db_entry_emitter(cxx, shared):
@@ -23,7 +39,13 @@ def enable(env, config):
                 if entry:
                     key = '{}:{}'.format(
                         entry['file'], str(target[0]) if config.multi else '')
+                    old_entry = compile_commands.get(key)
                     compile_commands[key] = entry
+
+                    if not old_entry:
+                        entry_counter.new += 1
+                    if old_entry and old_entry != entry:
+                        entry_counter.updated += 1
 
             entry_node = SCons.Node.Python.Value(source)
             entry = env._AddDbEntry(entry_node, [],
@@ -45,7 +67,7 @@ def enable(env, config):
 
     def update_internal_db_action(target, source, env):
         with open(target[0].path, 'w') as f:
-            json.dump(compile_commands, f, sort_keys=True)
+            json.dump(compile_commands, f, indent=2, sort_keys=True)
 
     #
     # Hook new emitters to the existing ones
@@ -69,15 +91,16 @@ def enable(env, config):
 
     env['BUILDERS']['_UpdateInternalDb'] = Builder(
         action=Action(update_internal_db_action,
-                      'Check compilation DB : $TARGET'))
+                      'Check compilation DB : $TARGET ... '
+                      '$_COMPILE_DB_COUNTER'))
 
     env['BUILDERS']['_UpdateDb'] = Builder(
         action=Action(update_db_action,
-                      ('Update compilation DB: $TARGET '
-                       'with #$_NCOMPILE_DB new entries)')))
+                      'Update compilation DB : $TARGET'))
 
     def compile_db(env, target=config.db):
         compile_commands.clear()
+        entry_counter.reset()
         head, tail = os.path.split(target)
         internal_path = os.path.join(head, '.' + tail)
         internal_db = env._UpdateInternalDb(internal_path, entry_group)[0]
