@@ -9,7 +9,6 @@ from SCons.Action import Action
 
 def enable(env, config):
     compile_commands = {}
-    merged_compile_commands = {}
 
     env['_COMPILE_DB_ID'] = id(compile_commands)
     entry_group = SCons.Node.Python.Value(id(compile_commands))
@@ -40,14 +39,13 @@ def enable(env, config):
 
     def update_db_action(target, source, env):
         # Convert dict to a list sorted with file/output tuple.
-        contents = [e for _, e in sorted(merged_compile_commands.items())]
+        contents = [e for _, e in sorted(compile_commands.items())]
         with open(target[0].path, 'w') as f:
             json.dump(contents, f, indent=2)
 
     def update_internal_db_action(target, source, env):
-        merged_compile_commands.update(compile_commands)
         with open(target[0].path, 'w') as f:
-            json.dump(merged_compile_commands, f, sort_keys=True)
+            json.dump(compile_commands, f, sort_keys=True)
 
     #
     # Hook new emitters to the existing ones
@@ -74,15 +72,17 @@ def enable(env, config):
                       'Check compilation DB : $TARGET'))
 
     env['BUILDERS']['_UpdateDb'] = Builder(
-        action=Action(update_db_action, 'Update compilation DB: $TARGET'))
+        action=Action(update_db_action,
+                      ('Update compilation DB: $TARGET '
+                       'with #$_NCOMPILE_DB new entries)')))
 
     def compile_db(env, target=config.db):
-        merged_compile_commands.clear()
+        compile_commands.clear()
         head, tail = os.path.split(target)
         internal_path = os.path.join(head, '.' + tail)
         internal_db = env._UpdateInternalDb(internal_path, entry_group)[0]
         if (not config.reset) and internal_db.exists():
-            merged_compile_commands.update(
+            compile_commands.update(
                 json.loads(internal_db.get_text_contents()))
         env.AlwaysBuild(internal_db)
         return env._UpdateDb(target, internal_db)
