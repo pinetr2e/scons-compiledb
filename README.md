@@ -45,7 +45,7 @@ env.CompileDb()
 
 `enable(env)` adds a new builder, `CompileDb` to the specified environment,
 `env`. In order to build the `compile_commands.json` file, `CompileDb()` should
-be called. It can also specify the file name as an optional argument.
+be called. It can also specify the DB file name as an optional argument.
 
 
 ### Enable and generation with command line option --compiledb
@@ -111,7 +111,14 @@ arguments clangd cannot understand.
 `entry_func` can be easily customised. Please refer to the source code of [the
 predefined functions](./scons_compiledb/entry_func.py)
 
+
 ## Details
+
+
+`enable(env)` modifies the builders related to the compilations, such as
+StaticObject, to add a additional Scanner, which make sure that the compilation
+commands are captured. `enable(env)` also adds a new builder `CompileDb`, which
+generates `compile_commands.json` from the captured commands.
 
 `scons_compiledb` maintains an internal dot file `.compile_commands.json` as
 default, to merge compile commands across the multiple SCons invocations. The
