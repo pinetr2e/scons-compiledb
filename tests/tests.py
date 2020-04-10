@@ -52,7 +52,7 @@ def test_enable_with_cmdline():
     run_scons('scons -f sconstruct_cmdline')
     assert read_compile_db() is None
 
-    run_scons('scons -f sconstruct_cmdline --compiledb')
+    run_scons('scons -f sconstruct_cmdline --compiledb=')
     assert read_compile_db() is not None
 
 
@@ -147,5 +147,25 @@ def test_config_multi():
             'directory': os.path.abspath("tests"),
             'command': "gcc -o build2/a.o -c -DD2 a.c",
             'file': 'a.c'
+        },
+    ]
+
+
+def test_enable_with_cmdline_with_config():
+    run_scons('scons -f sconstruct_cmdline --compiledb=')
+    assert read_compile_db() is not None
+
+    run_scons('scons -f sconstruct_cmdline_config --compiledb=reset,multi')
+    db = read_compile_db()
+    assert db == [
+        {
+            'directory': os.path.abspath("tests"),
+            'command': "gcc -o build/b.o -c -DD1 b.c",
+            'file': 'b.c'
+        },
+        {
+            'directory': os.path.abspath("tests"),
+            'command': "gcc -o build2/b.o -c -DD2 b.c",
+            'file': 'b.c'
         },
     ]

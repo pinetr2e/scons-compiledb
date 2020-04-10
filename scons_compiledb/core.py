@@ -5,7 +5,6 @@ import os
 import SCons
 from SCons.Builder import Builder, DictEmitter, ListEmitter
 from SCons.Action import Action
-from SCons.Script import GetOption, AddOption
 
 
 def enable(env, config):
@@ -88,25 +87,6 @@ def enable(env, config):
         env.AlwaysBuild(internal_db)
         return env._UpdateDb(target, internal_db)
     env.AddMethod(compile_db, 'CompileDb')
-
-
-def enable_with_cmdline(env, config, option_name, option_help):
-    def is_option_on():
-        def add_script_option():
-            AddOption('--' + option_name, dest='compile_db',
-                      action='store_true', help=option_help)
-        try:
-            return GetOption('compile_db')
-        except AttributeError:
-            add_script_option()
-            return GetOption('compile_db')
-
-    if not is_option_on():
-        return
-
-    enable(env, config)
-    db = env.CompileDb(config.db)
-    env.Default(env.Alias('compiledb', db))
 
 
 def enabled(env):

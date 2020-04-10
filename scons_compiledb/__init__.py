@@ -1,6 +1,6 @@
-from . import core, entry_func
+from . import core, cmdline, entry_func
 
-__version__ = '0.5.5'
+__version__ = '0.6.0'
 
 DEFAULT_OPTION_NAME = 'compiledb'
 DEFAULT_DB_NAME = '#/compile_commands.json'
@@ -21,13 +21,12 @@ def enable(env, config=None):
 
 
 def enable_with_cmdline(env, config=None,
-                        option_name=DEFAULT_OPTION_NAME,
-                        option_help='Update {}'.format(DEFAULT_DB_NAME)):
+                        option_name=DEFAULT_OPTION_NAME):
     """
-    Enable and build DB with command line option, --compiledb.
+    Enable and build DB with command line option, --compiledb=.
     """
-    return core.enable_with_cmdline(
-        env, config if config else Config(), option_name, option_help)
+    return cmdline.enable_with_cmdline(
+        env, config if config else Config(), option_name)
 
 
 entry_func_simple = entry_func.simple
