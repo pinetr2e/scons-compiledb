@@ -17,15 +17,16 @@ pytestmark = pytest.mark.usefixtures("change_and_clean_dir")
 
 
 def run_scons(cmd):
-    cmd = "{}".format(cmd)
+    cmd = "cd {}; {}".format(TEST_ABSPATH, cmd)
     subprocess.check_output(cmd, shell=True)
 
 
 def read_compile_db(db_name='compile_commands.json'):
-    if not os.path.exists(db_name):
+    db_path = '{}/{}'.format(TEST_ABSPATH, db_name)
+    if not os.path.exists(db_path):
         return None
 
-    with open(db_name) as f:
+    with open(db_path) as f:
         return json.load(f)
 
 
