@@ -3,29 +3,29 @@ import json
 import os
 import pytest
 
+TEST_ABSPATH = os.path.abspath(os.path.dirname(__file__))
+
 
 @pytest.fixture
-def cleandir():
-    subprocess.call(
-        "cd tests; "
-        "rm -f *.json .*.json *.o *.os ' 'hello* build/* build2/* ",
-        shell=True)
+def change_and_clean_dir():
+    cmd = ';'.join(('cd {}'.format(TEST_ABSPATH),
+                    'rm -f *.json .*.json *.o *.os hello* build/* build2/* '))
+    subprocess.call(cmd, shell=True)
 
 
-pytestmark = pytest.mark.usefixtures("cleandir")
+pytestmark = pytest.mark.usefixtures("change_and_clean_dir")
 
 
 def run_scons(cmd):
-    cmd = "cd tests; {}".format(cmd)
+    cmd = "{}".format(cmd)
     subprocess.check_output(cmd, shell=True)
 
 
 def read_compile_db(db_name='compile_commands.json'):
-    db_path = 'tests/{}'.format(db_name)
-    if not os.path.exists(db_path):
+    if not os.path.exists(db_name):
         return None
 
-    with open("tests/{}".format(db_name)) as f:
+    with open(db_name) as f:
         return json.load(f)
 
 
@@ -34,12 +34,12 @@ def test_basic():
     db = read_compile_db()
     assert db == [
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': "gcc -o a.o -c -DD1 -II1 a.c",
             'file': 'a.c'
         },
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': "g++ -o b.o -c -DD1 -II1 b.cpp",
             'file': 'b.cpp'
         },
@@ -67,12 +67,12 @@ def test_config_entry_func_simple():
     db = read_compile_db()
     assert db == [
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': 'clang -DD1 -DD2 -II1 -II2 -c a.c',
             'file': 'a.c'
         },
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': 'clang++ -DD1 -DD2 -II1 -II2 -c b.cpp',
             'file': 'b.cpp'
         },
@@ -97,12 +97,12 @@ def test_merge():
     db = read_compile_db()
     assert db == [
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': "gcc -o a.o -c -DD1 -II1 a.c",
             'file': 'a.c'
         },
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': "gcc -o b.o -c -DD2 -II2 b.c",
             'file': 'b.c'
         },
@@ -115,7 +115,7 @@ def test_config_reset():
     db = read_compile_db()
     assert db == [
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': "gcc -o b.o -c -DD2 -II2 b.c",
             'file': 'b.c'
         },
@@ -127,7 +127,7 @@ def test_same_source_compiled_multiple_times():
     db = read_compile_db()
     assert db == [
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': "gcc -o build2/a.o -c -DD2 a.c",
             'file': 'a.c'
         },
@@ -139,12 +139,12 @@ def test_config_multi():
     db = read_compile_db()
     assert db == [
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': "gcc -o build/a.o -c -DD1 a.c",
             'file': 'a.c'
         },
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': "gcc -o build2/a.o -c -DD2 a.c",
             'file': 'a.c'
         },
@@ -159,12 +159,12 @@ def test_enable_with_cmdline_with_config():
     db = read_compile_db()
     assert db == [
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': "gcc -o build/b.o -c -DD1 b.c",
             'file': 'b.c'
         },
         {
-            'directory': os.path.abspath("tests"),
+            'directory': TEST_ABSPATH,
             'command': "gcc -o build2/b.o -c -DD2 b.c",
             'file': 'b.c'
         },
