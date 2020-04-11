@@ -9,16 +9,16 @@ database defined by
 Features:
 
 - Multiple construction environments support.
-- Merge of compile_commands.json across SCons invocations
+- compile_commands.json merge across SCons invocations
 - Customisation for DB entry generation.
 - Build with command line option, --compiledb
-- Installation with PyPI
+- Simpler installation with PyPI
 
 
 At the moment, SCons mainline does not have compilation DB generation
 functionality and it is likely to have it in the near feature. However, this
 module can still provide some advantages such as supporting old version of SCons
-and other unique features.
+and other useful features.
 
 The module was tested with Python 2.x/3.x along with SCons 2.x/3.x.
 
@@ -39,9 +39,9 @@ import scons_compiledb
 
 env = DefaultEnvironment()  # Or with any other way
 scons_compiledb.enable(env)
-...
-... <use env normally>
-...
+# 
+# ... use env normally ...
+#
 env.CompileDb()
 ```
 
@@ -64,6 +64,7 @@ import scons_compiledb
 
 env = DefaultEnvironment()  # Or with any other way
 scons_compiledb.enable_with_cmdline(env)
+
 #
 # ... Use env normnally ...
 #
@@ -165,5 +166,5 @@ Please check SConscript files in [test folder](./tests)
 
 ## Credits
 
-The main functionality of scons-compiledb is heavily based on [MongoDB source
+The core functionality of scons-compiledb is based on [MongoDB source
 code](https://github.com/mongodb/mongo/blob/master/site_scons/site_tools/compilation_db.py).
