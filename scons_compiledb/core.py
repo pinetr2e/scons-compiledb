@@ -24,16 +24,30 @@ from SCons.Action import Action
 
 
 class _EntryCounter:
+    """
+    Track original entries to decide the correct number of added/updated ones.
+    """
     def __init__(self):
-        self.new = 0
-        self.updated = 0
-
-    def __str__(self):
-        return '{} new / {} updated'.format(self.new, self.updated)
+        self.reset()
 
     def reset(self):
-        self.new = 0
-        self.updated = 0
+        self._updated = {}
+
+    def __str__(self):
+        added = [k for k, (org, _) in self._updated.items() if not org]
+        updated = [k for k, (org, new) in self._updated.items()
+                   if org and org != new]
+        return '{} added / {} updated'.format(len(added), len(updated))
+
+    def update(self, key, old, new):
+        if key in self._updated:
+            org, _ = self._updated[key]
+            if org == new:
+                del self._updated[key]
+            else:
+                self._updated[key] = (org, new)
+        else:
+            self._updated[key] = (old, new)
 
 
 def enable(env, config):
@@ -57,11 +71,7 @@ def enable(env, config):
                         entry['file'], str(target[0]) if config.multi else '')
                     old_entry = compile_commands.get(key)
                     compile_commands[key] = entry
-
-                    if not old_entry:
-                        entry_counter.new += 1
-                    if old_entry and old_entry != entry:
-                        entry_counter.updated += 1
+                    entry_counter.update(key, old_entry, entry)
 
             entry_node = SCons.Node.Python.Value(source)
             entry = env._AddDbEntry(entry_node, [],
