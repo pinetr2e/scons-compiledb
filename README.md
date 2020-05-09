@@ -103,7 +103,7 @@ scons_compiledb.enable(env, config)
 | db           | filename of compilation DB.                                | '#/compile_commands.json' |
 | entry_func   | function to determine the entry dict for each source file. | entry_func_default        |
 | cxx_suffixes | Suffixes for C++ files.                                    | ('.cpp', '.cc')           |
-| ccc_suffixes | Suffixes for C files.                                      | ('.c,)                    |
+| cc_suffixes  | Suffixes for C files.                                      | ('.c',)                   |
 | reset        | Whether to remove existing entries                         | False                     |
 | multi        | Whether to allow multiple entries with the same 'file'.    | False                     |
 
@@ -144,7 +144,7 @@ different target(output) files.
 
 
 `enable(env)` modifies the builders related to the compilations, such as
-StaticObject, to add a additional Scanner, which make sure that the compilation
+StaticObject, to add an additional Scanner, which make sure that the compilation
 commands are captured. `enable(env)` also adds a new builder `CompileDb`, which
 generates `compile_commands.json` from the captured commands.
 
