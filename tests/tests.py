@@ -80,6 +80,19 @@ def test_config_entry_func_simple():
     ]
 
 
+def test_config_entry_func_simple_with_variantdir():
+    run_scons('scons -f sconstruct_variant')
+    db = read_compile_db()
+    assert db == [
+        {
+            'directory': TEST_DIR,
+            'command': ("clang -DD1 -Ibuild_variant/I1 -Isrc_variant/I1 "
+                        "-c src_variant/a.c"),
+            'file': 'src_variant/a.c'
+        },
+    ]
+
+
 def test_config_custom_entry_func():
     run_scons('scons -f sconstruct_config_custom_entry_func')
     db = read_compile_db()
