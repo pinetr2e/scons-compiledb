@@ -1,6 +1,6 @@
 from . import core, cmdline, entry_func
 
-__version__ = '0.7.3'
+__version__ = '0.7.4'
 
 DEFAULT_OPTION_NAME = 'compiledb'
 DEFAULT_DB_NAME = '#/compile_commands.json'
