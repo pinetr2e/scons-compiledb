@@ -1,1 +1,1 @@
-SConscript('src_variant/SConscript', variant_dir='build_variant', duplicate=0)
+SConscript('src_variant/sconscript', variant_dir='build_variant', duplicate=0)

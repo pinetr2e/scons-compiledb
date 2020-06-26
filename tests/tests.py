@@ -9,7 +9,7 @@ TEST_DIR = os.path.abspath(os.path.dirname(__file__))
 @pytest.fixture
 def change_and_clean_dir():
     cmd = ';'.join(('cd {}'.format(TEST_DIR),
-                    'rm -f *.json .*.json *.o *.os hello* build/* build2/* '))
+                    'rm -f *.json .*.json *.o *.os hello* build*/*'))
     subprocess.call(cmd, shell=True)
 
 
